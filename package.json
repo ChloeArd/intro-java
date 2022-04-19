@@ -1,0 +1,15 @@
+{
+  "name": "intro-java",
+  "version": "1.0.0",
+  "description": "",
+  "main": "backend/index.js",
+  "scripts": {
+    "start" : "node backend/index.js",
+    "test": "jest",
+    "build" : "tsc",
+    "lint": "eslint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
