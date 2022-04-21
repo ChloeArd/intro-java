@@ -1,6 +1,7 @@
 const express = require('express');
 
 const expressApp = express();
+expressApp.use(express.json());
 
 expressApp.use((req, res, next) => {
     console.log("Requête reçue => " + req.url);
@@ -36,6 +37,20 @@ expressApp.get("/hello/:name/:age?", (req, res, next) => {
     res.json({coucou: message });
     next();
 });
+
+expressApp.post("/message/add", (req, res, next) => {
+    console.log(req.body);
+    res.json({status: "ok"});
+    next();
+});
+
+expressApp.post("/message/add/:responseProperty", (req, res, next) => {
+    const property = req.params.responseProperty;
+    const response = {};
+    response[property] = "ok";
+    res.json(response);
+    next();
+})
 
 // Handle 404 errors
 expressApp.use(function (req, res, next) {
