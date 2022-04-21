@@ -12,4 +12,4 @@ getServerResponse(paragraph, 'message', server)
     .catch(err => console.log("Erreur de récup des données depuis '/'."));
 
 getServerResponse(hello, "coucou", server + "/hello")
-    .catch(err => console.log("Erreur de récup des données depuis '/hello'."))
+    .catch(err => console.log("Erreur de récup des données depuis '/hello'"));
