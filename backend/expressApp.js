@@ -1,7 +1,8 @@
 const express = require('express');
 const sequelize = require("./db");
-
+const ProductsController = require("./Controller/ProductsController");
 const expressApp = express();
+
 expressApp.use(express.json());
 
 expressApp.use((req, res, next) => {
@@ -10,9 +11,14 @@ expressApp.use((req, res, next) => {
 });
 
 expressApp.use((req, res, next) => {
+    res.setHeader("Content-Type0", "application/json");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization,");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST");
     res.status(200);
     next();
-});
+
+})
 
 /*expressApp.use((req, res, next) => {
     res.send('Hello World !');
@@ -27,12 +33,20 @@ expressApp.get("/", (req, res, next) => {
     next();
 });
 
-expressApp.get("/hello", (req, res, next) => {
+/*expressApp.get("/hello", (req, res, next) => {
     res.json({coucou: "Coucou !"});
     next();
+});*/
+
+expressApp.get("/products", (req, res, next) => {
+    ProductsController.getProducts(req, res, next, sequelize);
 });
 
-expressApp.get("/hello/:name/:age?", (req, res, next) => {
+expressApp.post("/product/add", (req, res, next) => {
+    ProductsController.addProduct(req, res, next, sequelize);
+});
+
+/*expressApp.get("/hello/:name/:age?", (req, res, next) => {
     const params = req.params;
     const message = undefined === params.age ? `Coucou ${req.params.name}` : `Coucou ${req.params.name}, vous avez ${params.age}`;
     res.json({coucou: message });
@@ -51,7 +65,7 @@ expressApp.post("/message/add/:responseProperty", (req, res, next) => {
     response[property] = "ok";
     res.json(response);
     next();
-})
+})*/
 
 // Handle 404 errors
 expressApp.use(function (req, res, next) {
