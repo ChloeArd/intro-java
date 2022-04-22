@@ -2,7 +2,9 @@ const express = require('express');
 const sequelize = require("./db");
 const ProductsController = require("./Controller/ProductsController");
 const expressApp = express();
+const Product = require("./model/Product");
 
+expressApp.use('/assets', express.static(__dirname + "/../public/build"));
 expressApp.use(express.json());
 
 //Initialisation de Mongoose
@@ -16,6 +18,7 @@ dbConnect()
         console.error("Erreur de connexion à la DB: " + err);
         process.exit(1);
     })
+;
 
 
 expressApp.use((req, res, next) => {
@@ -30,17 +33,14 @@ expressApp.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST");
     res.status(200);
     next();
-})
+});
 
 expressApp.get("/", (req, res, next) => {
-    const response = {
-      message: "Hello Wooooooorld",
-    }
-    res.json(response);
+    res.json({message: "Hello World"});
     next();
 });
 
-expressApp.get("/products", (req, res, next) => {
+/*expressApp.get("/products", (req, res, next) => {
     ProductsController.getProducts(req, res, next, sequelize);
 });
 
@@ -54,7 +54,7 @@ expressApp.post("/product/edit", (req, res, next) => {
 
 expressApp.post("/product/delete", (req, res, next) => {
     ProductsController.deleteProduct(req, res, next, sequelize);
-});
+});*/
 
 /*expressApp.get("/hello/:name/:age?", (req, res, next) => {
     const params = req.params;
@@ -63,20 +63,32 @@ expressApp.post("/product/delete", (req, res, next) => {
     next();
 });*/
 
+// Ajout d'un produit avec mongoose
+expressApp.post("/product/add", (req, res, next) => {
+    const product = new Product({...req.body});
+    product.save()
+        .then(() => {
+            res.status(201);
+            res.json({message: "ok"});
+        })
+        .catch(err => {
+            res.status(400);
+            res.json({error: "Impossible d'enregistrer le produit"});
+        })
+        .finally(() => next())
+    ;
+})
+
 // Handle 404 errors
 expressApp.use(function (req, res, next) {
     if (!req.route) {
-        res
-            .status(404)
-            .end()
-        ;
+        res.status(404).end();
         next();
     }
-})
+});
 
 expressApp.use((req, res) => {
-    console.log("Code response: " + res.statusCode);
-    console.log("Requête terminée, réponse envoyée au client");
-})
+    console.log("Code response: " + res.statusCode, "Requête terminée, réponse envoyée au client");
+});
 
 module.exports = expressApp;
