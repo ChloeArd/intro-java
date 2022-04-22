@@ -40,6 +40,55 @@ class ProductsController {
         }
         next();
     }
+
+    static editProduct = (req, res, next, sequelize) => {
+        const body = req.body;
+        if ("id" in body && "name" in body && "description" in body && "quantity" in body) {
+            sequelize.query(`UPDATE product set name = "${body.name}", description = "${body.description}", quantity = "${body.quantity}" 
+               WHERE id = ${body.id}`)
+
+                .then(() => res.json({
+                    message: "ok"
+                }))
+
+                .catch(err => res.json({
+                    error: `impossible de modifier le produit: ${err}`
+                }))
+
+                .finally(() => next())
+            ;
+        } else {
+            res.status(400);
+            res.json({
+                error: "Missing parameters"
+            });
+        }
+        next();
+    }
+
+    static deleteProduct = (req, res, next, sequelize) => {
+        const body = req.body;
+        if ("id" in body) {
+            sequelize.query(`DELETE FROM product WHERE id = ${body.id}`)
+
+                .then(() => res.json({
+                    message: "ok"
+                }))
+
+                .catch(err => res.json({
+                    error: `impossible de supprimer le produit: ${err}`
+                }))
+
+                .finally(() => next())
+            ;
+        } else {
+            res.status(400);
+            res.json({
+                error: "Missing parameters"
+            });
+        }
+        next();
+    }
 }
 
 module.exports = ProductsController;

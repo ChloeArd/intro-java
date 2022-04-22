@@ -46,6 +46,14 @@ expressApp.post("/product/add", (req, res, next) => {
     ProductsController.addProduct(req, res, next, sequelize);
 });
 
+expressApp.post("/product/edit", (req, res, next) => {
+    ProductsController.editProduct(req, res, next, sequelize);
+});
+
+expressApp.post("/product/delete", (req, res, next) => {
+    ProductsController.deleteProduct(req, res, next, sequelize);
+});
+
 /*expressApp.get("/hello/:name/:age?", (req, res, next) => {
     const params = req.params;
     const message = undefined === params.age ? `Coucou ${req.params.name}` : `Coucou ${req.params.name}, vous avez ${params.age}`;
