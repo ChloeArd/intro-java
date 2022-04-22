@@ -5,6 +5,19 @@ const expressApp = express();
 
 expressApp.use(express.json());
 
+//Initialisation de Mongoose
+const mongoose = require("mongoose");
+dbConnect = async () => await mongoose.connect(
+    "mongodb+srv://ChloeArd:XkZLWfCpJprAuTXf@cluster0.8pafq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+);
+
+dbConnect()
+    .catch(err => {
+        console.error("Erreur de connexion à la DB: " + err);
+        process.exit(1);
+    })
+
+
 expressApp.use((req, res, next) => {
     console.log("Requête reçue => " + req.url);
     next();
@@ -17,13 +30,7 @@ expressApp.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST");
     res.status(200);
     next();
-
 })
-
-/*expressApp.use((req, res, next) => {
-    res.send('Hello World !');
-    next();
-});*/
 
 expressApp.get("/", (req, res, next) => {
     const response = {
@@ -32,11 +39,6 @@ expressApp.get("/", (req, res, next) => {
     res.json(response);
     next();
 });
-
-/*expressApp.get("/hello", (req, res, next) => {
-    res.json({coucou: "Coucou !"});
-    next();
-});*/
 
 expressApp.get("/products", (req, res, next) => {
     ProductsController.getProducts(req, res, next, sequelize);
@@ -59,21 +61,7 @@ expressApp.post("/product/delete", (req, res, next) => {
     const message = undefined === params.age ? `Coucou ${req.params.name}` : `Coucou ${req.params.name}, vous avez ${params.age}`;
     res.json({coucou: message });
     next();
-});
-
-expressApp.post("/message/add", (req, res, next) => {
-    console.log(req.body);
-    res.json({status: "ok"});
-    next();
-});
-
-expressApp.post("/message/add/:responseProperty", (req, res, next) => {
-    const property = req.params.responseProperty;
-    const response = {};
-    response[property] = "ok";
-    res.json(response);
-    next();
-})*/
+});*/
 
 // Handle 404 errors
 expressApp.use(function (req, res, next) {
