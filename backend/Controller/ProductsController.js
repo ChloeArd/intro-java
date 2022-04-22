@@ -1,9 +1,8 @@
+class ProductsController {
 
- class ProductsController {
-
-     static getProducts = (req, res, next, sequelize) => {
+    static getProducts = (req, res, next, sequelize) => {
         sequelize.query(`SELECT * FROM product`)
-            .then(([products, metadata]) =>{
+            .then(([products, metadata]) => {
                 console.log(products);
                 res.json(products);
             })
@@ -18,29 +17,28 @@
     }
 
     static addProduct = (req, res, next, sequelize) => {
-         const body = req.body;
-         if ("name" in body && "description" in body && "quantity" in body) {
-             sequelize.query(`INSERT INTO product (name, description, quantity)
-                            VALUES ("${body.name}", "${body.description}", "${body.quantity}")`)
+        const body = req.body;
+        if ("name" in body && "description" in body && "quantity" in body) {
+            sequelize.query(`INSERT INTO product (name, description, quantity)
+                             VALUES ("${body.name}", "${body.description}", "${body.quantity}")`)
 
-                 .then(() => res.json({
-                     message: "ok"
-                 }))
+                .then(() => res.json({
+                    message: "ok"
+                }))
 
-                 .catch(err => res.json({
-                     error: `impossible d'ajouter le produit: ${err}`
-                 }))
+                .catch(err => res.json({
+                    error: `impossible d'ajouter le produit: ${err}`
+                }))
 
-                 .finally(() => next())
-             ;
-         }
-         else {
-             res.status(400);
-             res.json({
-                 error: "Missing parameters"
-             });
-         }
-         next();
+                .finally(() => next())
+            ;
+        } else {
+            res.status(400);
+            res.json({
+                error: "Missing parameters"
+            });
+        }
+        next();
     }
 }
 
