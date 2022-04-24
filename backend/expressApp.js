@@ -83,7 +83,7 @@ expressApp.get("/product/all", (req, res, next) => {
 });
 
 // Récupération un produit grâce à son ID
-expressApp.get("/product/:id", (req, res, next) => {
+expressApp.get("/product/get/:id", (req, res, next) => {
     Product.findById(req.params.id)
         .then((product) => res.json(product))
         .catch(err => dataError(res, "Impossible de récupérer ce produit", err))
@@ -115,11 +115,20 @@ expressApp.post("/product/add", (req, res, next) => {
     ;
 });
 
-// Ajout d'un produit avec mongoose
+// Modification d'un produit avec mongoose
 expressApp.put("/product/:id", (req, res, next) => {
     product.updateOne({_id:  req.params.id}, {...data, _id: req.params.id})
         .then(result => res.json(result))
         .catch(err => dataError(res, "Impossible de mettre à jour le produit", err))
+        .finally(() => next())
+    ;
+});
+
+// Suppression d'un produit avec mongoose
+expressApp.delete("/product/:id", (req, res, next) => {
+    product.findByIdAndDelete(req.params.id)
+        .then(product => res.json(product))
+        .catch(err => dataError(res, "Impossible de supprimer ce produit", err))
         .finally(() => next())
     ;
 });
