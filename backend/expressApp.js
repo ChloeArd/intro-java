@@ -105,7 +105,7 @@ expressApp.get("/product/find/:key-:value", (req, res, next) => {
 // Ajout d'un produit avec mongoose
 expressApp.post("/product/add", (req, res, next) => {
     const product = new Product({...req.body});
-    product.save()
+    Product.save()
         .then(() => {
             res.status(201);
             res.json({message: "ok"});
@@ -116,8 +116,11 @@ expressApp.post("/product/add", (req, res, next) => {
 });
 
 // Modification d'un produit avec mongoose
-expressApp.put("/product/:id", (req, res, next) => {
-    product.updateOne({_id:  req.params.id}, {...data, _id: req.params.id})
+expressApp.put("/product/edit/:id", (req, res, next) => {
+    const id = req.params.id;
+    const data = req.body;
+    data.id = id;
+    Product.updateOne({_id:  data.id}, {...data})
         .then(result => res.json(result))
         .catch(err => dataError(res, "Impossible de mettre à jour le produit", err))
         .finally(() => next())
@@ -125,8 +128,8 @@ expressApp.put("/product/:id", (req, res, next) => {
 });
 
 // Suppression d'un produit avec mongoose
-expressApp.delete("/product/:id", (req, res, next) => {
-    product.findByIdAndDelete(req.params.id)
+expressApp.delete("/product/delete/:id", (req, res, next) => {
+    Product.findByIdAndDelete(req.params.id)
         .then(product => res.json(product))
         .catch(err => dataError(res, "Impossible de supprimer ce produit", err))
         .finally(() => next())
